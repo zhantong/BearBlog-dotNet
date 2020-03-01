@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text.RegularExpressions;
+using BearBlog.Models;
 using Markdig;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
@@ -9,8 +10,8 @@ namespace BearBlog.Plugins.Article.Models
     {
         public int Id { get; set; }
         public string Title { get; set; }
-        public string Body { get; set; }
-        public string BodyHtml { get; set; }
+        [Visibility(Visibility.Full)] public string Body { get; set; }
+        [Visibility(Visibility.Full)] public string BodyHtml { get; set; }
         public string BodyAbstract { get; set; }
 
         public DateTime Timestamp { get; set; }
@@ -20,6 +21,8 @@ namespace BearBlog.Plugins.Article.Models
         public string VersionRemark { get; set; }
 
         public DateTime VersionTimestamp { get; set; }
+
+        public virtual User Author { get; set; }
 
         public Article()
         {
@@ -46,7 +49,8 @@ namespace BearBlog.Plugins.Article.Models
         private static void ParseMarkdown(Article article)
         {
             article.BodyHtml = Markdown.ToHtml(article.Body);
-            article.BodyAbstract = Regex.Replace(article.BodyHtml, "<[^<]+?>", "");
+            var escapedBodyHtml = Regex.Replace(article.BodyHtml, "<[^<]+?>", "");
+            article.BodyAbstract = escapedBodyHtml.Substring(0, Math.Min(escapedBodyHtml.Length, 200)) + "...";
         }
     }
 }

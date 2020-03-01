@@ -1,8 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using BearBlog.Models;
-using Microsoft.AspNet.OData;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace BearBlog.Plugins.Article.Controllers
 {
@@ -19,13 +18,16 @@ namespace BearBlog.Plugins.Article.Controllers
 
         // GET: api/Articles
         [HttpGet]
-        [EnableQuery(PageSize = 5, EnsureStableOrdering = false)]
-        public IEnumerable<Models.Article> Get()
+        [VisibilityFilter(Visibility.Brief)]
+        public PagedResult<Models.Article> Get(int page = 0)
         {
-            return _db.Articles
+            var result = _db.Articles
                 .Where(a => a.Status == "published")
+                .Include(a => a.Author)
                 .OrderByDescending(a => a.Timestamp)
-                .AsQueryable();
+                .AsQueryable()
+                .GetPaged(page, 4);
+            return result;
         }
     }
 }

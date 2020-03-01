@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using BearBlog.Models;
 
 namespace BearBlog.Plugins.Article.Models
@@ -16,6 +17,18 @@ namespace BearBlog.Plugins.Article.Models
             var articlesElement = e.Root.GetProperty("article");
             foreach (var article in articlesElement.EnumerateArray())
             {
+                var author = article.GetProperty("author").GetString();
+                var user = db.Users.FirstOrDefault(u => u.Username == author);
+                if (user == null)
+                {
+                    user = new User
+                    {
+                        Username = author
+                    };
+                    db.Users.Add(user);
+                    db.SaveChanges();
+                }
+
                 db.Articles.Add(new Article
                 {
                     Title = article.GetProperty("title").GetString(),
@@ -23,7 +36,8 @@ namespace BearBlog.Plugins.Article.Models
                     Timestamp = DateTimeOffset.FromUnixTimeSeconds(article.GetProperty("timestamp").GetInt64())
                         .UtcDateTime,
                     RepositoryId = Guid.Parse(article.GetProperty("version").GetProperty("repository_id").GetString()),
-                    Status = article.GetProperty("version").GetProperty("status").GetString()
+                    Status = article.GetProperty("version").GetProperty("status").GetString(),
+                    Author = user
                 });
             }
 

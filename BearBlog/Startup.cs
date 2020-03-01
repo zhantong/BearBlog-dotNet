@@ -1,13 +1,10 @@
 using BearBlog.Models;
-using BearBlog.Plugins.Article.Models;
-using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OData.Edm;
 
 namespace BearBlog
 {
@@ -25,6 +22,7 @@ namespace BearBlog
         {
             services.AddDbContext<BloggingContext>();
             services.AddControllers(mvcOptions => mvcOptions.EnableEndpointRouting = false);
+            services.AddMvc(options => { options.OutputFormatters.Insert(0, new VisibilityAwareJsonFormatter()); });
             services.AddOData();
         }
 
@@ -44,22 +42,10 @@ namespace BearBlog
 
             app.UseMvc(routeBuilder =>
             {
-                routeBuilder.Select().Filter();
-                routeBuilder.MapODataServiceRoute("odata", "odata", GetEdmModel());
+                routeBuilder.Select().Filter().Count();
+                //routeBuilder.MapODataServiceRoute("odata", "odata", GetEdmModel());
+                routeBuilder.EnableDependencyInjection();
             });
-
-            //app.UseEndpoints(endpoints =>
-            //{
-            //    endpoints.MapControllers();
-            //});
-        }
-
-        IEdmModel GetEdmModel()
-        {
-            var odataBuilder = new ODataConventionModelBuilder();
-            odataBuilder.EntitySet<Article>("Articles");
-
-            return odataBuilder.GetEdmModel();
         }
     }
 }
