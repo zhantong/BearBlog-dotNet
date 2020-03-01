@@ -29,16 +29,17 @@ namespace BearBlog.Plugins.Article.Models
                     db.SaveChanges();
                 }
 
-                db.Articles.Add(new Article
+                var createdArticle = new Article
                 {
                     Title = article.GetProperty("title").GetString(),
                     Body = article.GetProperty("body").GetString(),
                     Timestamp = DateTimeOffset.FromUnixTimeSeconds(article.GetProperty("timestamp").GetInt64())
                         .UtcDateTime,
-                    RepositoryId = Guid.Parse(article.GetProperty("version").GetProperty("repository_id").GetString()),
                     Status = article.GetProperty("version").GetProperty("status").GetString(),
                     Author = user
-                });
+                };
+                db.Articles.Add(createdArticle);
+                ArticleVersion.Models.ArticleVersion.AddArticle(db, null, createdArticle);
             }
 
             db.SaveChanges();

@@ -16,18 +16,13 @@ namespace BearBlog.Plugins.Article.Models
 
         public DateTime Timestamp { get; set; }
 
-        public Guid RepositoryId { get; set; }
         public string Status { get; set; }
-        public string VersionRemark { get; set; }
-
-        public DateTime VersionTimestamp { get; set; }
 
         public virtual User Author { get; set; }
 
         public Article()
         {
             Timestamp = DateTime.UtcNow;
-            VersionTimestamp = DateTime.UtcNow;
         }
 
         public static void OnEntityTracked(object sender, EntityTrackedEventArgs e)

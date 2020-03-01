@@ -1,4 +1,5 @@
 ﻿using BearBlog.Plugins.Article.Models;
+using BearBlog.Plugins.ArticleVersion.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace BearBlog.Models
@@ -8,6 +9,7 @@ namespace BearBlog.Models
         public DbSet<Role> Roles { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Article> Articles { get; set; }
+        public DbSet<ArticleVersion> ArticleVersions { get; set; }
 
         public BloggingContext()
         {
