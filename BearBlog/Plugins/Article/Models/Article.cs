@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace BearBlog.Plugins.Article.Models
 {
-    public class Article
+    public partial class Article
     {
         public int Id { get; set; }
         public string Title { get; set; }
@@ -18,7 +18,9 @@ namespace BearBlog.Plugins.Article.Models
 
         public string Status { get; set; }
 
-        public virtual User Author { get; set; }
+        public int? AuthorId { get; set; }
+
+        public User Author { get; set; }
 
         public Article()
         {

@@ -28,7 +28,11 @@ namespace BearBlog.Models
             var response = context.HttpContext.Response;
             await using var writer = context.WriterFactory(response.Body, selectedEncoding);
             await writer.WriteAsync(JsonConvert.SerializeObject(context.Object,
-                new JsonSerializerSettings() {ContractResolver = new VisibilityContractResolver(visibility)}));
+                new JsonSerializerSettings()
+                {
+                    ContractResolver = new VisibilityContractResolver(visibility),
+                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                }));
 
             // Perf: call FlushAsync to call WriteAsync on the stream with any content left in the TextWriter's
             // buffers. This is better than just letting dispose handle it (which would result in a synchronous

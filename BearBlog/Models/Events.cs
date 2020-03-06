@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text.Json;
+using BearBlog.Plugins.Article.Models;
 
 namespace BearBlog.Models
 {
@@ -19,9 +20,17 @@ namespace BearBlog.Models
             NavbarInit?.Invoke(null, e);
         }
 
+        public static event EventHandler<PatchArticleEventArgs> PatchArticle;
+
+        public static void OnPatchArticle(PatchArticleEventArgs e)
+        {
+            PatchArticle?.Invoke(null, e);
+        }
+
         public static void Init()
         {
             Plugins.Article.Models.Events.Register();
+            Plugins.Category.Models.Events.Register();
         }
     }
 
@@ -33,5 +42,11 @@ namespace BearBlog.Models
     public class NavbarInitEventArgs : EventArgs
     {
         public Navbar Navbar;
+    }
+
+    public class PatchArticleEventArgs : EventArgs
+    {
+        public Article TargetArticle;
+        public Article Patch;
     }
 }

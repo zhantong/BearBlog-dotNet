@@ -11,6 +11,7 @@ namespace BearBlog.Models
         public string Name { get; set; }
         public string EmailAddress { get; set; }
         public DateTime MemberSince { get; set; }
+        public int RoleId { get; set; }
         public Role Role { get; set; }
     }
 

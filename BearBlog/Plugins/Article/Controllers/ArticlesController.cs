@@ -29,5 +29,32 @@ namespace BearBlog.Plugins.Article.Controllers
                 .GetPaged(page, 4);
             return result;
         }
+
+        [HttpGet("{id}")]
+        public ActionResult<Models.Article> GetArticle(int id)
+        {
+            var article = _db.Articles
+                .Include(a => a.ArticleCategories)
+                .ThenInclude(ac => ac.Category)
+                .Single(a => a.Id == id);
+            return article;
+        }
+
+        [HttpPatch("{id}")]
+        public IActionResult PatchArticle(int id, Models.Article article)
+        {
+            Events.OnPatchArticle(new PatchArticleEventArgs() {TargetArticle = _db.Articles.Find(id), Patch = article});
+            _db.SaveChanges();
+
+            return NoContent();
+        }
+
+        [HttpPost]
+        public ActionResult<Models.Article> PostArticle(Models.Article article)
+        {
+            _db.Articles.Add(article);
+            _db.SaveChanges();
+            return CreatedAtAction("GetArticle", new {id = article.Id}, article);
+        }
     }
 }
