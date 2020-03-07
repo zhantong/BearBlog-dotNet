@@ -56,6 +56,8 @@ namespace BearBlog.Plugins.Article.Controllers
         {
             _db.Articles.Add(article);
             _db.SaveChanges();
+            Events.OnCreateArticle(new CreateArticleEventArgs {Article = article});
+            _db.SaveChanges();
             return CreatedAtAction("GetArticle", new {id = article.Id}, article);
         }
     }

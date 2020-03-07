@@ -20,12 +20,17 @@ namespace BearBlog.Controllers
 
         // GET: api/Users
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<User>>> GetUsers([FromQuery] string username)
+        public async Task<ActionResult<IEnumerable<User>>> GetUsers([FromQuery] string username, [FromQuery] string name)
         {
             var result = _context.Users.AsQueryable();
             if (!string.IsNullOrEmpty(username))
             {
                 result = result.Where(u => u.Username == username);
+            }
+
+            if (!string.IsNullOrEmpty(name))
+            {
+                result = result.Where(u => u.Name == name);
             }
 
             return await result.ToListAsync();

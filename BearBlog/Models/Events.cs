@@ -27,11 +27,19 @@ namespace BearBlog.Models
             PatchArticle?.Invoke(null, e);
         }
 
+        public static event EventHandler<CreateArticleEventArgs> CreateArticle;
+
+        public static void OnCreateArticle(CreateArticleEventArgs e)
+        {
+            CreateArticle?.Invoke(null, e);
+        }
+
         public static void Init()
         {
             Plugins.Article.Models.Events.Register();
             Plugins.Category.Models.Events.Register();
             Plugins.Tag.Models.Events.Register();
+            Plugins.Comment.Models.Events.Register();
         }
     }
 
@@ -49,5 +57,10 @@ namespace BearBlog.Models
     {
         public Article TargetArticle;
         public Article Patch;
+    }
+
+    public class CreateArticleEventArgs : EventArgs
+    {
+        public Article Article;
     }
 }

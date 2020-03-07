@@ -2,6 +2,7 @@
 using BearBlog.Plugins.ArticleVersion.Models;
 using Microsoft.EntityFrameworkCore;
 using BearBlog.Plugins.Category.Models;
+using BearBlog.Plugins.Comment.Models;
 using BearBlog.Plugins.Tag.Models;
 
 namespace BearBlog.Models
@@ -17,6 +18,9 @@ namespace BearBlog.Models
 
         public DbSet<Tag> Tags { get; set; }
         public DbSet<ArticleTag> ArticleTags { get; set; }
+
+        public DbSet<Comment> Comments { get; set; }
+        public DbSet<CommentCollection> CommentCollections { get; set; }
 
         public BloggingContext()
         {
