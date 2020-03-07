@@ -31,6 +31,7 @@ namespace BearBlog.Models
         {
             Plugins.Article.Models.Events.Register();
             Plugins.Category.Models.Events.Register();
+            Plugins.Tag.Models.Events.Register();
         }
     }
 

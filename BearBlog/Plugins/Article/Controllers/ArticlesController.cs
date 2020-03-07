@@ -36,6 +36,8 @@ namespace BearBlog.Plugins.Article.Controllers
             var article = _db.Articles
                 .Include(a => a.ArticleCategories)
                 .ThenInclude(ac => ac.Category)
+                .Include(a => a.ArticleTags)
+                .ThenInclude(at => at.Tag)
                 .Single(a => a.Id == id);
             return article;
         }

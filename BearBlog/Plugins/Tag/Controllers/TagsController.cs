@@ -1,28 +1,31 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BearBlog.Models;
+using BearBlog.Plugins.Tag.Models;
 
-namespace BearBlog.Plugins.Category.Controllers
+namespace BearBlog.Plugins.Tag.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CategoriesController : ControllerBase
+    public class TagsController : ControllerBase
     {
         private readonly BloggingContext _context;
 
-        public CategoriesController(BloggingContext context)
+        public TagsController(BloggingContext context)
         {
             _context = context;
         }
 
-        // GET: api/Categories
+        // GET: api/Tags
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Models.Category>>> GetCategory([FromQuery] string name)
+        public async Task<ActionResult<IEnumerable<Models.Tag>>> GetTag([FromQuery] string name)
         {
-            var result = _context.Categories.AsQueryable();
+            var result = _context.Tags.AsQueryable();
             if (!string.IsNullOrEmpty(name))
             {
                 result = result.Where(r => r.Name == name);
@@ -31,32 +34,32 @@ namespace BearBlog.Plugins.Category.Controllers
             return await result.ToListAsync();
         }
 
-        // GET: api/Categories/5
+        // GET: api/Tags/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Models.Category>> GetCategory(int id)
+        public async Task<ActionResult<Models.Tag>> GetTag(int id)
         {
-            var category = await _context.Categories.FindAsync(id);
+            var tag = await _context.Tags.FindAsync(id);
 
-            if (category == null)
+            if (tag == null)
             {
                 return NotFound();
             }
 
-            return category;
+            return tag;
         }
 
-        // PUT: api/Categories/5
+        // PUT: api/Tags/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCategory(int id, Models.Category category)
+        public async Task<IActionResult> PutTag(int id, Models.Tag tag)
         {
-            if (id != category.Id)
+            if (id != tag.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(category).State = EntityState.Modified;
+            _context.Entry(tag).State = EntityState.Modified;
 
             try
             {
@@ -64,7 +67,7 @@ namespace BearBlog.Plugins.Category.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!CategoryExists(id))
+                if (!TagExists(id))
                 {
                     return NotFound();
                 }
@@ -77,37 +80,37 @@ namespace BearBlog.Plugins.Category.Controllers
             return NoContent();
         }
 
-        // POST: api/Categories
+        // POST: api/Tags
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
-        public async Task<ActionResult<Models.Category>> PostCategory(Models.Category category)
+        public async Task<ActionResult<Models.Tag>> PostTag(Models.Tag tag)
         {
-            _context.Categories.Add(category);
+            _context.Tags.Add(tag);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetCategory", new {id = category.Id}, category);
+            return CreatedAtAction("GetTag", new {id = tag.Id}, tag);
         }
 
-        // DELETE: api/Categories/5
+        // DELETE: api/Tags/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Models.Category>> DeleteCategory(int id)
+        public async Task<ActionResult<Models.Tag>> DeleteTag(int id)
         {
-            var category = await _context.Categories.FindAsync(id);
-            if (category == null)
+            var tag = await _context.Tags.FindAsync(id);
+            if (tag == null)
             {
                 return NotFound();
             }
 
-            _context.Categories.Remove(category);
+            _context.Tags.Remove(tag);
             await _context.SaveChangesAsync();
 
-            return category;
+            return tag;
         }
 
-        private bool CategoryExists(int id)
+        private bool TagExists(int id)
         {
-            return _context.Categories.Any(e => e.Id == id);
+            return _context.Tags.Any(e => e.Id == id);
         }
     }
 }
