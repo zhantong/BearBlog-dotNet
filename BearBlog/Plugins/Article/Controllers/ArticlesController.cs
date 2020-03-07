@@ -22,7 +22,6 @@ namespace BearBlog.Plugins.Article.Controllers
         public PagedResult<Models.Article> Get(int page = 0)
         {
             var result = _db.Articles
-                .Where(a => a.Status == "published")
                 .Include(a => a.Author)
                 .OrderByDescending(a => a.Timestamp)
                 .AsQueryable()

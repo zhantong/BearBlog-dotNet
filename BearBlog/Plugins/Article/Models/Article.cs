@@ -10,13 +10,12 @@ namespace BearBlog.Plugins.Article.Models
     {
         public int Id { get; set; }
         public string Title { get; set; }
+        public string Slug { get; set; }
         [Visibility(Visibility.Full)] public string Body { get; set; }
         [Visibility(Visibility.Full)] public string BodyHtml { get; set; }
         public string BodyAbstract { get; set; }
 
         public DateTime Timestamp { get; set; }
-
-        public string Status { get; set; }
 
         public int? AuthorId { get; set; }
 

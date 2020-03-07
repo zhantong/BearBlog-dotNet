@@ -35,11 +35,9 @@ namespace BearBlog.Plugins.Article.Models
                     Body = article.GetProperty("body").GetString(),
                     Timestamp = DateTimeOffset.FromUnixTimeSeconds(article.GetProperty("timestamp").GetInt64())
                         .UtcDateTime,
-                    Status = article.GetProperty("version").GetProperty("status").GetString(),
                     Author = user
                 };
                 db.Articles.Add(createdArticle);
-                ArticleVersion.Models.ArticleVersion.AddArticle(db, null, createdArticle);
             }
 
             db.SaveChanges();
