@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Linq;
 using System.Text.Json;
 using BearBlog.Plugins.Article.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace BearBlog.Models
 {
@@ -34,6 +36,13 @@ namespace BearBlog.Models
             CreateArticle?.Invoke(null, e);
         }
 
+        public static event EventHandler<ListArticlesEventArgs> ListArticles;
+
+        public static void OnListArticles(ListArticlesEventArgs e)
+        {
+            ListArticles?.Invoke(null, e);
+        }
+
         public static void Init()
         {
             Plugins.Article.Models.Events.Register();
@@ -63,5 +72,11 @@ namespace BearBlog.Models
     public class CreateArticleEventArgs : EventArgs
     {
         public Article Article;
+    }
+
+    public class ListArticlesEventArgs : EventArgs
+    {
+        public HttpRequest HttpRequest;
+        public IQueryable<Article> Query;
     }
 }

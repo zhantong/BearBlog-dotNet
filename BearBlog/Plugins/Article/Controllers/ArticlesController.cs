@@ -21,15 +21,17 @@ namespace BearBlog.Plugins.Article.Controllers
         [VisibilityFilter(Visibility.Brief)]
         public PagedResult<Models.Article> Get(int page = 0)
         {
-            var result = _db.Articles
+            var query = _db.Articles
                 .Include(a => a.Author)
                 .OrderByDescending(a => a.Timestamp)
-                .AsQueryable()
-                .GetPaged(page, 4);
-            return result;
+                .AsQueryable();
+            var listArticlesEventArgs = new ListArticlesEventArgs {HttpRequest = HttpContext.Request, Query = query};
+            Events.OnListArticles(listArticlesEventArgs);
+            return listArticlesEventArgs.Query.GetPaged(page, 4);
         }
 
         [HttpGet("{id}")]
+        [VisibilityFilter(Visibility.Full)]
         public ActionResult<Models.Article> GetArticle(int id)
         {
             var article = _db.Articles
@@ -38,6 +40,19 @@ namespace BearBlog.Plugins.Article.Controllers
                 .Include(a => a.ArticleTags)
                 .ThenInclude(at => at.Tag)
                 .Single(a => a.Id == id);
+            return article;
+        }
+
+        [HttpGet("slug/{slug}")]
+        [VisibilityFilter(Visibility.Full)]
+        public ActionResult<Models.Article> GetArticleBySlug(string slug)
+        {
+            var article = _db.Articles
+                .Include(a => a.ArticleCategories)
+                .ThenInclude(ac => ac.Category)
+                .Include(a => a.ArticleTags)
+                .ThenInclude(at => at.Tag)
+                .Single(a => a.Slug == slug);
             return article;
         }
 

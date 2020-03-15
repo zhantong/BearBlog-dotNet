@@ -20,15 +20,9 @@ namespace BearBlog.Plugins.Category.Controllers
 
         // GET: api/Categories
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Models.Category>>> GetCategory([FromQuery] string name)
+        public async Task<ActionResult<IEnumerable<Models.Category>>> GetCategory()
         {
-            var result = _context.Categories.AsQueryable();
-            if (!string.IsNullOrEmpty(name))
-            {
-                result = result.Where(r => r.Name == name);
-            }
-
-            return await result.ToListAsync();
+            return await _context.Categories.ToListAsync();
         }
 
         // GET: api/Categories/5
@@ -41,6 +35,14 @@ namespace BearBlog.Plugins.Category.Controllers
             {
                 return NotFound();
             }
+
+            return category;
+        }
+
+        [HttpGet("slug/{slug}")]
+        public ActionResult<Models.Category> GetCategoryBySlug(string slug)
+        {
+            var category = _context.Categories.Single(c => c.Slug == slug);
 
             return category;
         }
