@@ -1,5 +1,6 @@
 ﻿using System;
 using BearBlog.Models;
+using Newtonsoft.Json;
 
 namespace BearBlog.Plugins.Comment.Models
 {
@@ -14,9 +15,9 @@ namespace BearBlog.Plugins.Comment.Models
         public string Ip { get; set; }
         public string Agent { get; set; }
         public int? ParentId { get; set; }
-        public Comment ParentComment { get; set; }
+        [JsonIgnore] public Comment ParentComment { get; set; }
 
         public int CommentCollectionId { get; set; }
-        public CommentCollection CommentCollection { get; set; }
+        [JsonIgnore] public CommentCollection CommentCollection { get; set; }
     }
 }

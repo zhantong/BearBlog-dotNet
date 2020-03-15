@@ -30,7 +30,7 @@ namespace BearBlog.Plugins.Comment.Controllers
 
         // GET: api/CommentCollections/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<CommentCollection>> GetCommentCollection(int id)
+        public ActionResult<IEnumerable<RecursiveComment>> GetCommentCollection(int id)
         {
             var commentCollection = _context.CommentCollections
                 .AsQueryable()
@@ -43,7 +43,7 @@ namespace BearBlog.Plugins.Comment.Controllers
                 return NotFound();
             }
 
-            return commentCollection;
+            return Ok(RecursiveComment.ParseComments(commentCollection.Comments));
         }
 
         // PUT: api/CommentCollections/5
