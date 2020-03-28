@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using BearBlog.Models;
+using BearBlog.Plugins.Article.DataModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,15 +20,19 @@ namespace BearBlog.Plugins.Article.Controllers
         // GET: api/Articles
         [HttpGet]
         [VisibilityFilter(Visibility.Brief)]
-        public PagedResult<Models.Article> Get(int page = 0)
+        public PagedResult<ArticleDataModel> Get(int page = 0)
         {
             var query = _db.Articles
                 .Include(a => a.Author)
+                .Include(a => a.ArticleCategories)
+                .ThenInclude(ac => ac.Category)
+                .Include(a => a.CommentCollection)
+                .ThenInclude(cc => cc.Comments)
                 .OrderByDescending(a => a.Timestamp)
                 .AsQueryable();
             var listArticlesEventArgs = new ListArticlesEventArgs {HttpRequest = HttpContext.Request, Query = query};
             Events.OnListArticles(listArticlesEventArgs);
-            return listArticlesEventArgs.Query.GetPaged(page, 4);
+            return listArticlesEventArgs.Query.GetPaged(page, 4, article => new ArticleDataModel(article));
         }
 
         [HttpGet("{id}")]
@@ -52,6 +57,8 @@ namespace BearBlog.Plugins.Article.Controllers
                 .ThenInclude(ac => ac.Category)
                 .Include(a => a.ArticleTags)
                 .ThenInclude(at => at.Tag)
+                .Include(a => a.CommentCollection)
+                .ThenInclude(cc => cc.Comments)
                 .Single(a => a.Slug == slug);
             return article;
         }

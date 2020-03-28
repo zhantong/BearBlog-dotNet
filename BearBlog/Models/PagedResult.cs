@@ -13,9 +13,9 @@ namespace BearBlog.Models
 
     public static class PagedResultExtension
     {
-        public static PagedResult<T> GetPaged<T>(this IQueryable<T> query, int page, int pageSize)
+        public static PagedResult<TResult> GetPaged<T, TResult>(this IQueryable<T> query, int page, int pageSize, Func<T, TResult> selectFunc)
         {
-            var result = new PagedResult<T>
+            var result = new PagedResult<TResult>
             {
                 PageContext = new PageContext
                 {
@@ -27,6 +27,8 @@ namespace BearBlog.Models
             var skip = (page - 1) * pageSize;
             result.Items = query.Skip(skip)
                 .Take(pageSize)
+                .AsEnumerable()
+                .Select(selectFunc)
                 .ToList();
             return result;
         }
