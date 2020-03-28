@@ -35,24 +35,12 @@ namespace BearBlog.Plugins.Article.Controllers
             return listArticlesEventArgs.Query.GetPaged(page, 4, article => new ArticleDataModel(article));
         }
 
-        [HttpGet("{id}")]
-        [VisibilityFilter(Visibility.Full)]
-        public ActionResult<Models.Article> GetArticle(int id)
-        {
-            var article = _db.Articles
-                .Include(a => a.ArticleCategories)
-                .ThenInclude(ac => ac.Category)
-                .Include(a => a.ArticleTags)
-                .ThenInclude(at => at.Tag)
-                .Single(a => a.Id == id);
-            return article;
-        }
-
         [HttpGet("slug/{slug}")]
         [VisibilityFilter(Visibility.Full)]
-        public ActionResult<Models.Article> GetArticleBySlug(string slug)
+        public ActionResult<ArticleDataModel> GetArticleBySlug(string slug)
         {
             var article = _db.Articles
+                .Include(a => a.Author)
                 .Include(a => a.ArticleCategories)
                 .ThenInclude(ac => ac.Category)
                 .Include(a => a.ArticleTags)
@@ -60,7 +48,7 @@ namespace BearBlog.Plugins.Article.Controllers
                 .Include(a => a.CommentCollection)
                 .ThenInclude(cc => cc.Comments)
                 .Single(a => a.Slug == slug);
-            return article;
+            return new ArticleDataModel(article);
         }
 
         [HttpPatch("{id}")]
