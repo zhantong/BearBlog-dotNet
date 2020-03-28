@@ -6,11 +6,6 @@ namespace BearBlog.Plugins.Article.DataModels
 {
     public partial class ArticleDataModel
     {
-        public List<CategoryDataModel> Categories { get; set; }
-
-        partial void Init(Models.Article article)
-        {
-            Categories = article.ArticleCategories.Select(ac => new CategoryDataModel(ac.Category)).ToList();
-        }
+        public List<CategoryDataModel> Categories => _article.ArticleCategories.Select(ac => new CategoryDataModel(ac.Category)).ToList();
     }
 }
