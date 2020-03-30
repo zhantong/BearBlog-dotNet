@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BearBlog.Models;
-using BearBlog.Plugins.Tag.Models;
 
 namespace BearBlog.Plugins.Tag.Controllers
 {
@@ -23,15 +20,9 @@ namespace BearBlog.Plugins.Tag.Controllers
 
         // GET: api/Tags
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Models.Tag>>> GetTag([FromQuery] string name)
+        public async Task<ActionResult<IEnumerable<Models.Tag>>> GetTag()
         {
-            var result = _context.Tags.AsQueryable();
-            if (!string.IsNullOrEmpty(name))
-            {
-                result = result.Where(r => r.Name == name);
-            }
-
-            return await result.ToListAsync();
+            return await _context.Tags.ToListAsync();
         }
 
         // GET: api/Tags/5
@@ -45,6 +36,13 @@ namespace BearBlog.Plugins.Tag.Controllers
                 return NotFound();
             }
 
+            return tag;
+        }
+
+        [HttpGet("slug/{slug}")]
+        public ActionResult<Models.Tag> GetTagBySlug(string slug)
+        {
+            var tag = _context.Tags.Single(c => c.Slug == slug);
             return tag;
         }
 
