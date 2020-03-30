@@ -20,7 +20,7 @@ namespace BearBlog.Plugins.Article.Controllers
         // GET: api/Articles
         [HttpGet]
         [VisibilityFilter(Visibility.Brief)]
-        public PagedResult<ArticleDataModel> Get(int page = 0)
+        public PagedResult<ArticleDataModel> Get(int page = 1)
         {
             var query = _db.Articles
                 .Include(a => a.Author)
@@ -67,7 +67,7 @@ namespace BearBlog.Plugins.Article.Controllers
             _db.SaveChanges();
             Events.OnCreateArticle(new CreateArticleEventArgs {Article = article});
             _db.SaveChanges();
-            return CreatedAtAction("GetArticle", new {id = article.Id}, article);
+            return CreatedAtAction("GetArticleBySlug", new {slug = article.Slug}, article);
         }
     }
 }
