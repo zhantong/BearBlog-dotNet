@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using BearBlog.Models;
 using BearBlog.Plugins.Article.DataModels;
 using Microsoft.AspNetCore.Mvc;
@@ -35,6 +36,20 @@ namespace BearBlog.Plugins.Article.Controllers
             return listArticlesEventArgs.Query.GetPaged(page, 4, article => new ArticleDataModel(article));
         }
 
+        [HttpGet("{id}")]
+        [VisibilityFilter(Visibility.Full)]
+        public async Task<ActionResult<Models.Article>> GetArticle(int id)
+        {
+            var article = await _db.Articles.FindAsync(id);
+
+            if (article == null)
+            {
+                return NotFound();
+            }
+
+            return article;
+        }
+
         [HttpGet("slug/{slug}")]
         [VisibilityFilter(Visibility.Full)]
         public ActionResult<ArticleDataModel> GetArticleBySlug(string slug)
@@ -68,6 +83,21 @@ namespace BearBlog.Plugins.Article.Controllers
             Events.OnCreateArticle(new CreateArticleEventArgs {Article = article});
             _db.SaveChanges();
             return CreatedAtAction("GetArticleBySlug", new {slug = article.Slug}, article);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutArticle(int id, Models.Article article)
+        {
+            var storedArticle = _db.Articles.Find(id);
+
+            if (!string.IsNullOrEmpty(article.Body))
+            {
+                storedArticle.Body = article.Body;
+            }
+
+            _db.SaveChanges();
+
+            return NoContent();
         }
     }
 }

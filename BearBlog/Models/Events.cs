@@ -50,6 +50,7 @@ namespace BearBlog.Models
             Plugins.Tag.Models.Events.Register();
             Plugins.Comment.Models.Events.Register();
             Plugins.ArticleVersion.Models.Events.Register();
+            Plugins.Attachment.Models.Events.Register();
         }
     }
 

@@ -1,5 +1,6 @@
 ﻿using BearBlog.Plugins.Article.Models;
 using BearBlog.Plugins.ArticleVersion.Models;
+using BearBlog.Plugins.Attachment.Models;
 using Microsoft.EntityFrameworkCore;
 using BearBlog.Plugins.Category.Models;
 using BearBlog.Plugins.Comment.Models;
@@ -21,6 +22,9 @@ namespace BearBlog.Models
 
         public DbSet<Comment> Comments { get; set; }
         public DbSet<CommentCollection> CommentCollections { get; set; }
+
+        public DbSet<Attachment> Attachments { get; set; }
+        public DbSet<ArticleAttachment> ArticleAttachments { get; set; }
 
         public BloggingContext()
         {
