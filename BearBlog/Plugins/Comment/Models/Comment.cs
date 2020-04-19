@@ -14,10 +14,15 @@ namespace BearBlog.Plugins.Comment.Models
         public User Author { get; set; }
         public string Ip { get; set; }
         public string Agent { get; set; }
-        public int? ParentId { get; set; }
+        public int? ParentCommentId { get; set; }
         [JsonIgnore] public Comment ParentComment { get; set; }
 
         public int CommentCollectionId { get; set; }
         [JsonIgnore] public CommentCollection CommentCollection { get; set; }
+
+        public Comment()
+        {
+            Timestamp = DateTime.UtcNow;
+        }
     }
 }

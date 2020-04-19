@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BearBlog.Models;
-using BearBlog.Plugins.Comment.Models;
+using Microsoft.Net.Http.Headers;
 
 namespace BearBlog.Plugins.Comment.Controllers
 {
@@ -82,9 +80,24 @@ namespace BearBlog.Plugins.Comment.Controllers
         {
             if (comment.AuthorId == 0)
             {
+                if (comment.Author.RoleId == 0)
+                {
+                    comment.Author.RoleId = 1;
+                }
+
                 _context.Users.Add(comment.Author);
                 _context.SaveChanges();
                 comment.AuthorId = comment.Author.Id;
+            }
+
+            if (string.IsNullOrEmpty(comment.Ip))
+            {
+                comment.Ip = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            }
+
+            if (string.IsNullOrEmpty(comment.Agent))
+            {
+                comment.Agent = Request.Headers[HeaderNames.UserAgent];
             }
 
             _context.Comments.Add(comment);

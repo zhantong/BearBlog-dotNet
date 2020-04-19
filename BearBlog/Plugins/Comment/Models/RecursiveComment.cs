@@ -28,17 +28,17 @@ namespace BearBlog.Plugins.Comment.Models
             var parentDictionary = new Dictionary<int, ICollection<Comment>>();
             foreach (var comment in comments)
             {
-                if (comment.ParentId == null)
+                if (comment.ParentCommentId == null)
                 {
-                    comment.ParentId = 0;
+                    comment.ParentCommentId = 0;
                 }
 
-                if (!parentDictionary.ContainsKey(comment.ParentId.Value))
+                if (!parentDictionary.ContainsKey(comment.ParentCommentId.Value))
                 {
-                    parentDictionary[comment.ParentId.Value] = new List<Comment>();
+                    parentDictionary[comment.ParentCommentId.Value] = new List<Comment>();
                 }
 
-                parentDictionary[comment.ParentId.Value].Add(comment);
+                parentDictionary[comment.ParentCommentId.Value].Add(comment);
             }
 
             return ProcessChildren(parentDictionary, 0);
